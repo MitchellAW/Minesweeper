@@ -5,6 +5,9 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -48,10 +51,12 @@ public class MinesweeperGUI extends JFrame {
 			for (int j=0; j<board.getWidth(); j++) {
 				boardButtons[i][j] = new JButton();
 				boardButtons[i][j].setVisible(true);
-				setColours(i, j);
+				setColour(i, j);
 
 				gameBoard.add(boardButtons[i][j]); 
 				boardButtons[i][j].addActionListener(new myActionListener());
+				boardButtons[i][j].addMouseListener(new mouseListener());
+
 				// 30 for easy, 
 				boardButtons[i][j].setFont(new Font("Arial Unicode MS", Font.BOLD, 30));
 			}
@@ -97,14 +102,42 @@ public class MinesweeperGUI extends JFrame {
 						boardButtons[i][j].setBackground(new JButton().getBackground());
 						boardButtons[i][j].setForeground(Color.BLACK);
 						boardButtons[i][j].setText("");
-						setColours(i, j);
+						setColour(i, j);
 						frame.setTitle("Mitch's Minesweeper");
 					}
 				}
 			}
 		}
 	}
-	public void setColours(int row, int column) {
+	public class mouseListener implements MouseListener {
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) {
+		}
+
+		@Override
+		public void mouseExited(MouseEvent arg0) {
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			for (int i=0; i<boardButtons.length; i++) {
+				for (int j=0; j<boardButtons[0].length; j++) {
+					if (e.getButton() == 3 && e.getSource() == boardButtons[i][j]) {
+						setFlag(i, j);
+					}
+				}
+			}
+		}
+		@Override
+		public void mouseReleased(MouseEvent arg0) {
+		}
+
+	}
+	public void setColour(int row, int column) {
 		String currentPiece = board.getPieceAt(row, column);
 		switch (currentPiece) {
 		case "1":
@@ -136,6 +169,7 @@ public class MinesweeperGUI extends JFrame {
 	public void reveal(int row, int column) {
 		boardButtons[row][column].setText(board.getPieceAt(row, column));
 		boardButtons[row][column].setBackground(bgColour);
+		setColour(row, column);
 	}
 	public void revealMines() {
 		for (int i=0; i<boardButtons.length; i++) {
@@ -179,5 +213,13 @@ public class MinesweeperGUI extends JFrame {
 	}
 	public void winner() {
 		frame.setTitle("Mitch's Minesweeper: ***** YOU WIN *****");
+	}
+	public void setFlag(int row, int column) {
+		if (!boardButtons[row][column].getText().equals(Character.toString(board.getFlag()))) {
+			boardButtons[row][column].setText(Character.toString(board.getFlag()));
+			boardButtons[row][column].setForeground(Color.RED);
+		} else {
+			boardButtons[row][column].setText("");
+		}
 	}
 }

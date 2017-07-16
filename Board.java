@@ -6,6 +6,7 @@ public class Board {
 	private int mineCount;
 	private String difficulty;
 	
+	private char flag = '⚑';
 	private char mine = '✸';
 
 	private char[][] board;
@@ -100,7 +101,9 @@ public class Board {
 	public char getMine() {
 		return this.mine;
 	}
-	
+	public char getFlag() {
+		return this.flag;
+	}	
 	public String toString() {
 		String newString = "";
 

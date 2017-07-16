@@ -57,13 +57,13 @@ public class MinesweeperGUI extends JFrame {
 
 				gameBoard.add(boardButtons[i][j]); 
 				boardButtons[i][j].addMouseListener(new mouseListener());
-
-				// 30 for easy, 
 				boardButtons[i][j].setFont(new Font("Arial Unicode MS", 
 						Font.BOLD, 30));
 			}
 		}
 	}
+	// Sets the piece to the appropriate colour based on the number of mines
+	// surrounding it
 	public void setColour(int row, int col) {
 		String currentPiece = board.getPieceAt(row, col);
 		switch (currentPiece) {
@@ -93,6 +93,7 @@ public class MinesweeperGUI extends JFrame {
 			break;	
 		}
 	}
+	// Will reveal what is on the board at row & column
 	public void reveal(int row, int col) {
 		if (board.isPiece(row, col, ' ')) {
 			revealBlanks(row, col);
@@ -102,6 +103,7 @@ public class MinesweeperGUI extends JFrame {
 			setColour(row, col);
 		}
 	}
+	// Will reveal all the mines on the board
 	public void revealMines() {
 		for (int i=0; i<boardButtons.length; i++) {
 			for (int j=0; j<boardButtons[0].length; j++) {
@@ -112,6 +114,8 @@ public class MinesweeperGUI extends JFrame {
 			}
 		}
 	}
+	// Will reveal all adjacent blank places
+	// TODO make it reveal one layer further
 	public void revealBlanks(int row, int col) {
 		if (!boardButtons[row][col].getBackground().equals(defaultBg)) {
 			return;
@@ -138,9 +142,11 @@ public class MinesweeperGUI extends JFrame {
 		}
 		return true;
 	}
+	// Changes title to display that they have won
 	public void winner() {
 		frame.setTitle("Mitch's Minesweeper: ***** YOU WIN *****");
 	}
+	// Place / Remove flag
 	public void setFlag(int row, int col) {
 		if (!boardButtons[row][col].getText().equals(flag)) {
 			boardButtons[row][col].setText(flag);
@@ -176,6 +182,7 @@ public class MinesweeperGUI extends JFrame {
 					}
 				}
 			}
+			// When reset button is clicked
 			if(e.getSource() == resetButton) {
 				board.reset();
 				gameOver = false;

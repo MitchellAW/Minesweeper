@@ -52,6 +52,7 @@ public class MinesweeperGUI extends JFrame {
 
 				gameBoard.add(boardButtons[i][j]); 
 				boardButtons[i][j].addActionListener(new myActionListener());
+				// 30 for easy, 
 				boardButtons[i][j].setFont(new Font("Arial Unicode MS", Font.BOLD, 30));
 			}
 		}
@@ -72,8 +73,16 @@ public class MinesweeperGUI extends JFrame {
 						} else if (action.getSource() == boardButtons[i][j] &&
 								board.isPiece(i, j, ' ')) {
 							revealBlanks(i, j);
+							if (isWinner()) {
+								gameOver = true;
+								winner();
+							}
 						} else if (action.getSource() == boardButtons[i][j]) {
 							reveal(i, j);
+							if (isWinner()) {
+								gameOver = true;
+								winner();
+							}
 						}
 					}
 				}
@@ -157,5 +166,18 @@ public class MinesweeperGUI extends JFrame {
 	public static void main(String[] args) {
 		MinesweeperGUI game = new MinesweeperGUI();
 		game.initialise();
+	}
+	public boolean isWinner() {
+		for (int i=0; i<boardButtons.length; i++) {
+			for (int j=0; j<boardButtons[0].length; j++) {
+				if (!board.isPiece(i, j, board.getMine()) && boardButtons[i][j].getBackground().equals(new JButton().getBackground())) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	public void winner() {
+		frame.setTitle("Mitch's Minesweeper: ***** YOU WIN *****");
 	}
 }

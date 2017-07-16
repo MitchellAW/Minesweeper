@@ -24,6 +24,8 @@ public class Board {
 	public String getDifficulty() {
 		return this.difficulty;
 	}
+	// Will set the difficulty and appropriate game settings based on the 
+	// difficulty set
 	public void setDifficulty(String difficulty) {
 		this.difficulty = difficulty.toUpperCase();
 		if (difficulty.equals("EASY")) {
@@ -46,14 +48,15 @@ public class Board {
 			this.height = 9;
 		}
 	}
-	public int nearbyMines(int row, int col, char piece) {
+	// Returns the number of mines surrounding the position
+	public int nearbyMines(int row, int col) {
 		int minesNearby = 0;
 
 		// TODO Would like to perform a loop of this
 		// Checks 8 surrounding squares and checks if they're piece
 		for (int i=row-1; i<=row+1; i++) {
 			for (int j=col-1; j<=col+1; j++) {
-				if (isPiece(i, j, piece)) {
+				if (isPiece(i, j, this.mine)) {
 					minesNearby++;
 				}
 			}
@@ -70,9 +73,11 @@ public class Board {
 			return false;
 		}
 	}
+	// Returns a string version of the piece at the position
 	public String getPieceAt(int row, int col) {
 		return Character.toString(this.board[row][col]);
 	}
+	// Sets/Resets the board, filling it with mines and hints
 	public void reset() {
 		board = new char[this.height][this.width];
 
@@ -81,13 +86,13 @@ public class Board {
 
 		// Fill the board with the mines (X)
 		for (int i=0; i<mineIndexes.length; i++) {
-			this.board[Math.floorDiv(mineIndexes[i], this.width)][mineIndexes[i] % this.width] = mine;
+			this.board[Math.floorDiv(mineIndexes[i], this.width)][mineIndexes[i] % this.width] = this.mine;
 		}
 		// Add the numbers (mine hints)
 		for (int i=0; i<this.board.length; i++) {
 			for (int j=0; j<this.board[0].length; j++) {
 				if (this.board[i][j] != mine) {
-					int minesNearby = nearbyMines(i, j, mine);
+					int minesNearby = nearbyMines(i, j);
 					if (minesNearby != 0) {
 						this.board[i][j] = (char)(minesNearby + 48);
 					} else {

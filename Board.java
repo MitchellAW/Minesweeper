@@ -6,8 +6,8 @@ public class Board {
 	private int mineCount;
 	private String difficulty;
 	
-	private char flag = '⚑';
-	private char mine = '✸';
+	public char flag = '⚑';
+	public char mine = '✸';
 
 	private char[][] board;
 
@@ -46,33 +46,33 @@ public class Board {
 			this.height = 9;
 		}
 	}
-	public int nearbyPieces(int row, int column, char piece) {
+	public int nearbyPieces(int row, int col, char piece) {
 		int piecesNearby = 0;
 
 		// TODO Would like to perform a loop of this
 		// Checks 8 surrounding squares and checks if they're piece
-		if (isPiece(row - 1, column, piece)) { piecesNearby++;}
-		if (isPiece(row - 1, column + 1, piece)) { piecesNearby++;}
-		if (isPiece(row, column + 1, piece)) { piecesNearby++;}
-		if (isPiece(row + 1, column + 1, piece)) { piecesNearby++;}
-		if (isPiece(row + 1, column, piece)) { piecesNearby++;}
-		if (isPiece(row + 1, column - 1, piece)) { piecesNearby++;}
-		if (isPiece(row, column - 1, piece)) { piecesNearby++;}
-		if (isPiece(row - 1, column - 1, piece)) { piecesNearby++;}
+		if (isPiece(row - 1, col, piece)) { piecesNearby++;}
+		if (isPiece(row - 1, col + 1, piece)) { piecesNearby++;}
+		if (isPiece(row, col + 1, piece)) { piecesNearby++;}
+		if (isPiece(row + 1, col + 1, piece)) { piecesNearby++;}
+		if (isPiece(row + 1, col, piece)) { piecesNearby++;}
+		if (isPiece(row + 1, col - 1, piece)) { piecesNearby++;}
+		if (isPiece(row, col - 1, piece)) { piecesNearby++;}
+		if (isPiece(row - 1, col - 1, piece)) { piecesNearby++;}
 		return piecesNearby;
 	}
 	// Will return false if the position is not a mine or if the position 
 	// is outside the bounds of the board
-	public boolean isPiece(int row, int column, char piece) {
-		if (row >= 0 && row < this.height && column >= 0 && 
-				column < this.width && this.board[row][column] == piece) {
+	public boolean isPiece(int row, int col, char piece) {
+		if (row >= 0 && row < this.height && col >= 0 && 
+				col < this.width && this.board[row][col] == piece) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-	public String getPieceAt(int row, int column) {
-		return Character.toString(this.board[row][column]);
+	public String getPieceAt(int row, int col) {
+		return Character.toString(this.board[row][col]);
 	}
 	public void reset() {
 		board = new char[this.height][this.width];

@@ -22,7 +22,7 @@ public class MinesweeperGUI extends JFrame {
 
 	boolean gameOver = false;
 
-	Color bgColour = new Color(238,238,238);
+	Color bgColour = new Color(236,236,236);
 
 	public MinesweeperGUI() {
 		frame.setSize(600, 600);
@@ -61,17 +61,18 @@ public class MinesweeperGUI extends JFrame {
 		public void actionPerformed(ActionEvent action) {
 
 			//Display the player's piece on the buttons
-			for(int i=0; i<board.getHeight(); i++) {
-				for (int j=0; j<board.getWidth(); j++) {
-					if (action.getSource() == boardButtons[i][j] && 
-							board.isPiece(i, j, board.getMine())) {
-						if (gameOver == false) {
+			if (gameOver == false) {
+				for(int i=0; i<board.getHeight(); i++) {
+					for (int j=0; j<board.getWidth(); j++) {
+						if (action.getSource() == boardButtons[i][j] && 
+								board.isPiece(i, j, board.getMine())) {
 							gameOver = true;
 							revealMines();
 							boardButtons[i][j].setBackground(Color.RED);
-						}
-					} else if (action.getSource() == boardButtons[i][j]) {
-						if (gameOver == false) {
+						} else if (action.getSource() == boardButtons[i][j] &&
+								board.isPiece(i, j, ' ')) {
+							revealBlanks(i, j);
+						} else if (action.getSource() == boardButtons[i][j]) {
 							reveal(i, j);
 						}
 					}
@@ -80,6 +81,7 @@ public class MinesweeperGUI extends JFrame {
 			// When the reset button is clicked, reset the board & the display
 			if(action.getSource() == resetButton) {
 				board.reset();
+				gameOver = false;
 				for(int i=0; i<board.getHeight(); i++) {
 					for (int j=0; j<board.getWidth(); j++) { 
 						boardButtons[i][j].setEnabled(true);
@@ -125,9 +127,6 @@ public class MinesweeperGUI extends JFrame {
 	public void reveal(int row, int column) {
 		boardButtons[row][column].setText(board.getPieceAt(row, column));
 		boardButtons[row][column].setBackground(bgColour);
-		if (board.isPiece(row, column, ' ')) {
-			boardButtons[row][column].setEnabled(false);
-		}
 	}
 	public void revealMines() {
 		for (int i=0; i<boardButtons.length; i++) {
@@ -139,8 +138,22 @@ public class MinesweeperGUI extends JFrame {
 			}
 		}
 	}
-
-
+	public void revealBlanks(int row, int column) {
+		if (!boardButtons[row][column].getBackground().equals(new JButton().getBackground())) {
+			return;
+		}
+		if (board.isPiece(row, column, ' ')) {
+			boardButtons[row][column].setBackground(bgColour);
+			if (board.isPiece(row - 1, column, ' ')) { revealBlanks(row-1, column);}
+			if (board.isPiece(row - 1, column + 1, ' ')) { revealBlanks(row-1, column+1);}
+			if (board.isPiece(row, column + 1, ' ')) { revealBlanks(row, column+1);}
+			if (board.isPiece(row + 1, column + 1, ' ')) { revealBlanks(row+1, column+1);}
+			if (board.isPiece(row + 1, column, ' ')) { revealBlanks(row+1, column);}
+			if (board.isPiece(row + 1, column - 1, ' ')) { revealBlanks(row+1, column-1);}
+			if (board.isPiece(row, column - 1, ' ')) { revealBlanks(row, column-1);}
+			if (board.isPiece(row - 1, column - 1, ' ')) { revealBlanks(row-1, column-1);}
+		}
+	}
 	public static void main(String[] args) {
 		MinesweeperGUI game = new MinesweeperGUI();
 		game.initialise();

@@ -62,6 +62,7 @@ public class MinesweeperGUI extends JFrame {
 					if (action.getSource() == boardButtons[i][j] && 
 							board.isPiece(i, j, board.getMine())) {
 						revealMines();
+						boardButtons[i][j].setBackground(Color.RED);
 					} else if (action.getSource() == boardButtons[i][j]) {
 						reveal(i, j);
 					}
@@ -77,7 +78,7 @@ public class MinesweeperGUI extends JFrame {
 						boardButtons[i][j].setForeground(Color.BLACK);
 						boardButtons[i][j].setText("");
 						setColours(i, j);
-						frame.setTitle("Mitch's Tic Tac Toe");
+						frame.setTitle("Mitch's Minesweeper");
 					}
 				}
 			}
@@ -120,8 +121,12 @@ public class MinesweeperGUI extends JFrame {
 			for (int j=0; j<boardButtons[0].length; j++) {
 				if (board.isPiece(i, j, board.getMine())) {
 					boardButtons[i][j].setForeground(Color.BLACK);
-					boardButtons[i][j].setBackground(Color.RED);
 					boardButtons[i][j].setText(board.getPieceAt(i, j));
+				} else {
+					if (board.isPiece(i, j, ' ')) {
+						boardButtons[i][j].setEnabled(false);
+					}
+					reveal(i, j);
 				}
 			}
 		}

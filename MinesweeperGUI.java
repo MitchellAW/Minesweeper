@@ -118,14 +118,13 @@ public class MinesweeperGUI extends JFrame {
 		}
 		if (board.isPiece(row, col, ' ')) {
 			boardButtons[row][col].setBackground(background);
-			if (board.isPiece(row - 1, col, ' ')) { revealBlanks(row-1, col);}
-			if (board.isPiece(row - 1, col + 1, ' ')) { revealBlanks(row-1, col+1);}
-			if (board.isPiece(row, col + 1, ' ')) { revealBlanks(row, col+1);}
-			if (board.isPiece(row + 1, col + 1, ' ')) { revealBlanks(row+1, col+1);}
-			if (board.isPiece(row + 1, col, ' ')) { revealBlanks(row+1, col);}
-			if (board.isPiece(row + 1, col - 1, ' ')) { revealBlanks(row+1, col-1);}
-			if (board.isPiece(row, col - 1, ' ')) { revealBlanks(row, col-1);}
-			if (board.isPiece(row - 1, col - 1, ' ')) { revealBlanks(row-1, col-1);}
+			for (int i=row-1; i<=row+1; i++) {
+				for (int j=col-1; j<=col+1; j++) {
+					if (board.isPiece(i, j, ' ')) {
+						revealBlanks(i, j);
+					}
+				}
+			}
 		}
 	}
 	public boolean isWinner() {

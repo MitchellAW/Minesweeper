@@ -46,20 +46,19 @@ public class Board {
 			this.height = 9;
 		}
 	}
-	public int nearbyPieces(int row, int col, char piece) {
-		int piecesNearby = 0;
+	public int nearbyMines(int row, int col, char piece) {
+		int minesNearby = 0;
 
 		// TODO Would like to perform a loop of this
 		// Checks 8 surrounding squares and checks if they're piece
-		if (isPiece(row - 1, col, piece)) { piecesNearby++;}
-		if (isPiece(row - 1, col + 1, piece)) { piecesNearby++;}
-		if (isPiece(row, col + 1, piece)) { piecesNearby++;}
-		if (isPiece(row + 1, col + 1, piece)) { piecesNearby++;}
-		if (isPiece(row + 1, col, piece)) { piecesNearby++;}
-		if (isPiece(row + 1, col - 1, piece)) { piecesNearby++;}
-		if (isPiece(row, col - 1, piece)) { piecesNearby++;}
-		if (isPiece(row - 1, col - 1, piece)) { piecesNearby++;}
-		return piecesNearby;
+		for (int i=row-1; i<=row+1; i++) {
+			for (int j=col-1; j<=col+1; j++) {
+				if (isPiece(i, j, piece)) {
+					minesNearby++;
+				}
+			}
+		}
+		return minesNearby;
 	}
 	// Will return false if the position is not a mine or if the position 
 	// is outside the bounds of the board
@@ -88,7 +87,7 @@ public class Board {
 		for (int i=0; i<this.board.length; i++) {
 			for (int j=0; j<this.board[0].length; j++) {
 				if (this.board[i][j] != mine) {
-					int minesNearby = nearbyPieces(i, j, mine);
+					int minesNearby = nearbyMines(i, j, mine);
 					if (minesNearby != 0) {
 						this.board[i][j] = (char)(minesNearby + 48);
 					} else {

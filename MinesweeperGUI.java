@@ -145,10 +145,6 @@ public class MinesweeperGUI extends JFrame {
 		}
 		return true;
 	}
-	// Changes title to display that they have won
-	public void winner() {
-		frame.setTitle("Mitch's Minesweeper: ***** YOU WIN *****");
-	}
 	// Place / Remove flag
 	public void setFlag(int row, int col) {
 		if (!boardButtons[row][col].getText().equals(flag)) {
@@ -172,13 +168,14 @@ public class MinesweeperGUI extends JFrame {
 							if (board.isPiece(i, j, board.mine)) {
 								gameOver = true;
 								revealMines();
+								frame.setTitle("Mitch's Minesweeper:   ***** YOU LOSE :( *****");
 								boardButtons[i][j].setBackground(Color.RED);
 								// If piece wasn't blank, reveal
 							} else {
 								reveal(i, j);
 								if (isWinner()) {
 									gameOver = true;
-									winner();
+									frame.setTitle("Mitch's Minesweeper:   ***** YOU WIN :D *****");
 								}
 							}
 						}

@@ -3,12 +3,20 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 public class MinesweeperGUI extends JFrame {
 
@@ -16,9 +24,16 @@ public class MinesweeperGUI extends JFrame {
 
 	Board board = new Board("EASY");
 
-	JButton[][] boardButtons = new JButton[board.getHeight()][board.getWidth()];
+	JButton[][] boardButtons;
 	JButton resetButton = new JButton("Reset");
 	JFrame frame = new JFrame("Mitch's Minesweeper");
+	
+	JMenuItem easyOption = new JMenuItem("Easy");
+	JMenuItem mediumOption = new JMenuItem("Medium");
+	JMenuItem hardOption = new JMenuItem("Hard");
+
+	JTextArea output;
+	JScrollPane scrollPane;
 
 	boolean gameOver = false;
 
@@ -29,24 +44,84 @@ public class MinesweeperGUI extends JFrame {
 	Color defaultBg = new JButton().getBackground();
 
 	public MinesweeperGUI() {
-		frame.setSize(600, 600);
+
+		frame.setJMenuBar(createMenuBar());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		frame.setResizable(true);
+		
+		frame.setContentPane(createBoard(board.getDifficulty()));
+
 	}
-	private void initialise() {
+	public JMenuBar createMenuBar() {
+		JMenuBar menuBar;
+		JMenu menu, submenu;
+		
+		//Create the menu bar.
+		menuBar = new JMenuBar();
+
+		//Build the first menu.
+		menu = new JMenu("File");
+		
+		frame.add(menu);
+		
+		menu.setMnemonic(KeyEvent.VK_A);
+		menu.getAccessibleContext().setAccessibleDescription(
+				"The only menu in this program that has menu items");
+		menuBar.add(menu);
+		
+		//a submenu
+		menu.addSeparator();
+		submenu = new JMenu("Change Difficulty");
+		submenu.setMnemonic(KeyEvent.VK_S);
+		
+		submenu.add(easyOption);
+		easyOption.addActionListener(new MyActionListener());
+
+		submenu.add(mediumOption);
+		mediumOption.addActionListener(new MyActionListener());
+		
+		submenu.add(hardOption);
+		hardOption.addActionListener(new MyActionListener());
+
+
+		menu.add(submenu);
+		
+		return menuBar;
+	}
+	public JPanel createBoard(String difficulty) {
+		board.setDifficulty(difficulty);
+		board.reset();
+
+		gameOver = false;
+
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		JPanel gameBoard = new JPanel(new GridLayout(board.getHeight(),
 				board.getWidth()));		
 
+		boardButtons = new JButton[board.getHeight()][board.getWidth()];
+
 		frame.add(mainPanel);
 
-		gameBoard.setPreferredSize(new Dimension(500,500));
+		switch (difficulty) {
+		case "EASY":
+			frame.setSize(500, 600);
+			gameBoard.setPreferredSize(new Dimension(450, 450));
+			break;
+		case "MEDIUM":
+			frame.setSize(900, 1000);
+			gameBoard.setPreferredSize(new Dimension(800, 800));
+			break;
+		case "HARD":
+			frame.setSize(1700, 1000);
+			gameBoard.setPreferredSize(new Dimension(1600, 800));
+			break;
+		}
 
 		mainPanel.add(gameBoard, BorderLayout.NORTH);
 		mainPanel.add(resetButton);
 
-		resetButton.addMouseListener(new mouseListener());
+		resetButton.addMouseListener(new MyMouseListener());
 
 		// Initialise all the buttons
 		for(int i=0; i<board.getHeight(); i++) {
@@ -56,11 +131,12 @@ public class MinesweeperGUI extends JFrame {
 				setColour(i, j);
 
 				gameBoard.add(boardButtons[i][j]); 
-				boardButtons[i][j].addMouseListener(new mouseListener());
+				boardButtons[i][j].addMouseListener(new MyMouseListener());
 				boardButtons[i][j].setFont(new Font("Arial Unicode MS", 
-						Font.BOLD, 30));
+						Font.BOLD, 20));
 			}
 		}
+		return mainPanel;
 	}
 	// Sets the piece to the appropriate colour based on the number of mines
 	// surrounding it
@@ -154,8 +230,20 @@ public class MinesweeperGUI extends JFrame {
 			boardButtons[row][col].setText("");
 		}
 	}
+	public class MyActionListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == easyOption) {
+				frame.setContentPane(createBoard("EASY"));
+			} else if (e.getSource() == mediumOption) {
+				frame.setContentPane(createBoard("MEDIUM"));
+			} else if (e.getSource() == hardOption) {
+				frame.setContentPane(createBoard("HARD"));
+			}
+			
+		}
+	}
 	// When buttons are clicked
-	public class mouseListener implements MouseListener {
+	public class MyMouseListener implements MouseListener {
 		// Playing on left clicks
 		public void mouseClicked(MouseEvent e) {
 			if (gameOver == false && e.getButton() != 3) {
@@ -186,11 +274,11 @@ public class MinesweeperGUI extends JFrame {
 			if(e.getSource() == resetButton) {
 				board.reset();
 				gameOver = false;
-				for(int i=0; i<board.getHeight(); i++) {
-					for (int j=0; j<board.getWidth(); j++) { 
+				frame.setTitle("Mitch's Minesweeper");
+				for(int i=0; i<boardButtons.length; i++) {
+					for (int j=0; j<boardButtons[0].length; j++) { 
 						boardButtons[i][j].setBackground(defaultBg);
 						boardButtons[i][j].setText("");
-						frame.setTitle("Mitch's Minesweeper");
 					}
 				}
 			}
@@ -204,10 +292,7 @@ public class MinesweeperGUI extends JFrame {
 						if (e.getButton() == 3 && 
 								e.getSource() == boardButtons[i][j]) {
 							// Flag if not already flagged
-							if (buttonText.equals("")) {
-								setFlag(i, j);
-								// Remove flag if already flagged
-							} else if (buttonText.equals(flag)) {
+							if (buttonText.equals("") || buttonText.equals(flag)) {
 								setFlag(i, j);
 							}
 						}
@@ -220,7 +305,6 @@ public class MinesweeperGUI extends JFrame {
 		public void mouseReleased(MouseEvent arg0) { }
 	}
 	public static void main(String[] args) {
-		MinesweeperGUI game = new MinesweeperGUI();
-		game.initialise();
+		new MinesweeperGUI();
 	}
 }

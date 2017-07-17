@@ -63,11 +63,17 @@ public class Board {
 		}
 		return minesNearby;
 	}
-	// Will return false if the position is not a mine or if the position 
-	// is outside the bounds of the board
+	// Will return true if the position is equal to 'piece'
 	public boolean isPiece(int row, int col, char piece) {
-		if (row >= 0 && row < this.height && col >= 0 && 
-				col < this.width && this.board[row][col] == piece) {
+		if (isValid(row, col) && this.board[row][col] == piece) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	// Will return true if the position is withing the bounds of the board
+	public boolean isValid(int row, int col) {
+		if (row >= 0 && row < this.height && col >= 0 && col < this.width) {
 			return true;
 		} else {
 			return false;

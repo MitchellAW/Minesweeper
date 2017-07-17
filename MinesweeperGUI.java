@@ -98,9 +98,11 @@ public class MinesweeperGUI extends JFrame {
 		if (board.isPiece(row, col, ' ')) {
 			revealBlanks(row, col);
 		} else {
-			boardButtons[row][col].setText(board.getPieceAt(row, col));
-			boardButtons[row][col].setBackground(background);
-			setColour(row, col);
+			if (board.isValid(row,  col) && !board.isPiece(row, col, board.getMine())) {
+				boardButtons[row][col].setText(board.getPieceAt(row, col));
+				boardButtons[row][col].setBackground(background);
+				setColour(row, col);
+			}
 		}
 	}
 	// Will reveal all the mines on the board
@@ -114,8 +116,7 @@ public class MinesweeperGUI extends JFrame {
 			}
 		}
 	}
-	// Will reveal all adjacent blank places
-	// TODO make it reveal one layer further
+	// Will reveal all adjacent blank places and the outer layer of hints
 	public void revealBlanks(int row, int col) {
 		if (!boardButtons[row][col].getBackground().equals(defaultBg)) {
 			return;
@@ -126,6 +127,8 @@ public class MinesweeperGUI extends JFrame {
 				for (int j=col-1; j<=col+1; j++) {
 					if (board.isPiece(i, j, ' ')) {
 						revealBlanks(i, j);
+					} else {
+						reveal(i,j);
 					}
 				}
 			}
@@ -170,7 +173,7 @@ public class MinesweeperGUI extends JFrame {
 								gameOver = true;
 								revealMines();
 								boardButtons[i][j].setBackground(Color.RED);
-								// If piece was blank, reveal rest of blanks
+								// If piece wasn't blank, reveal
 							} else {
 								reveal(i, j);
 								if (isWinner()) {

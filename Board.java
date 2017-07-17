@@ -29,7 +29,7 @@ public class Board {
 	public void setDifficulty(String difficulty) {
 		this.difficulty = difficulty.toUpperCase();
 		if (difficulty.equals("EASY")) {
-			this.mineCount = 10;
+			this.mineCount = 7;
 			this.width = 9;
 			this.height = 9;
 		} else if (difficulty.equals("MEDIUM")) {

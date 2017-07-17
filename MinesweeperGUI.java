@@ -254,14 +254,14 @@ public class MinesweeperGUI extends JFrame {
 							if (board.isPiece(i, j, board.mine)) {
 								gameOver = true;
 								revealMines();
-								frame.setTitle("Mitch's Minesweeper:   ***** YOU LOSE :( *****");
+								frame.setTitle("Mitch's Minesweeper: ***** YOU LOSE *****");
 								boardButtons[i][j].setBackground(Color.RED);
 								// If piece wasn't blank, reveal
 							} else {
 								reveal(i, j);
 								if (isWinner()) {
 									gameOver = true;
-									frame.setTitle("Mitch's Minesweeper:   ***** YOU WIN :D *****");
+									frame.setTitle("Mitch's Minesweeper: ***** YOU WIN *****");
 								}
 							}
 						}

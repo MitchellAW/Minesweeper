@@ -43,11 +43,9 @@ public class MinesweeperGUI extends JFrame {
 		frame.setJMenuBar(createMenuBar());
 
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setContentPane(createBoard(board.getDifficulty()));
 		frame.setVisible(true);
 		frame.setResizable(true);
-
-		frame.setContentPane(createBoard(board.getDifficulty()));
-
 	}
 
 	public JMenuBar createMenuBar() {
@@ -183,8 +181,14 @@ public class MinesweeperGUI extends JFrame {
 		for (int i = 0; i < boardButtons.length; i++) {
 			for (int j = 0; j < boardButtons[0].length; j++) {
 				if (board.isPiece(i, j, board.mine)) {
-					boardButtons[i][j].setForeground(Color.BLACK);
-					boardButtons[i][j].setText(board.getPieceAt(i, j));
+					if (boardButtons[i][j].getText().equals(flag) == false) {
+						boardButtons[i][j].setForeground(Color.BLACK);
+						boardButtons[i][j].setText(board.getPieceAt(i, j));
+					} else if (board.isPiece(i, j, board.mine) && 
+					boardButtons[i][j].getText().equals(flag)) {
+						boardButtons[i][j].setForeground(Color.BLACK);
+						boardButtons[i][j].setBackground(Color.RED);
+					}
 				}
 			}
 		}
@@ -267,7 +271,8 @@ public class MinesweeperGUI extends JFrame {
 								frame.setTitle(
 										"Mitch's Minesweeper: *** YOU LOSE ***");
 								boardButtons[i][j].setBackground(Color.RED);
-								JOptionPane.showMessageDialog(frame, "Bad Luck. You lose.");						
+								JOptionPane.showMessageDialog(frame,
+										"Bad Luck. You lose.");
 								// If piece wasn't blank, reveal
 							} else {
 								reveal(i, j);
@@ -275,7 +280,8 @@ public class MinesweeperGUI extends JFrame {
 									gameOver = true;
 									frame.setTitle(
 											"Mitch's Minesweeper: *** YOU WIN ***");
-									JOptionPane.showMessageDialog(frame, "Congratulations! You win!");						
+									JOptionPane.showMessageDialog(frame,
+											"Congratulations! You win!");
 								}
 							}
 						}
